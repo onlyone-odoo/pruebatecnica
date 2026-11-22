@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+
+    <record id="view_sale_credit_group_list" model="ir.ui.view">
+        <field name="name">sale.credit.group.list</field>
+        <field name="model">sale.credit.group</field>
+        <field name="arch" type="xml">
+            <list string="Credit Groups">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="channel_id"/>
+                <field name="global_credit"/>
+                <field name="used_credit"/>
+                <field name="available_credit"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_credit_group_form" model="ir.ui.view">
+        <field name="name">sale.credit.group.form</field>
+        <field name="model">sale.credit.group</field>
+        <field name="arch" type="xml">
+            <form string="Credit Group">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_credit_orders" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart">
+                            <span>Sales Orders</span>
+                        </button>
+                        <button name="action_open_credit_invoices" type="object"
+                                class="oe_stat_button" icon="fa-pencil-square-o">
+                            <span>Invoices</span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Group name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="channel_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="global_credit"/>
+                            <field name="used_credit" readonly="1"/>
+                            <field name="available_credit" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Customers" name="partners">
+                            <field name="partner_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="vat"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <field name="credit_control"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_credit_group_search" model="ir.ui.view">
+        <field name="name">sale.credit.group.search</field>
+        <field name="model">sale.credit.group</field>
+        <field name="arch" type="xml">
+            <search string="Credit Groups">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="channel_id"/>
+                <field name="partner_ids"/>
+                <group expand="0" string="Group By">
+                    <filter string="Sales Channel" name="group_by_channel"
+                            context="{'group_by': 'channel_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sale_credit_group" model="ir.actions.act_window">
+        <field name="name">Credit Groups</field>
+        <field name="res_model">sale.credit.group</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a credit group
+            </p>
+            <p>
+                Assign customers to a group to limit their sales on one channel.
+            </p>
+        </field>
+    </record>
+
+</odoo>

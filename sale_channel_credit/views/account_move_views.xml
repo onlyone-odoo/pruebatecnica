@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+
+    <record id="view_move_form_channel" model="ir.ui.view">
+        <field name="name">account.move.form.channel</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="channel_id"
+                       invisible="move_type not in ('out_invoice', 'out_refund')"
+                       readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_list_channel" model="ir.ui.view">
+        <field name="name">account.move.list.channel</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_origin" position="after">
+                <field name="channel_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_channel" model="ir.ui.view">
+        <field name="name">account.move.search.channel</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="channel_id"/>
+            </field>
+            <xpath expr="//group" position="inside">
+                <filter string="Sales Channel" name="group_by_channel_id"
+                        context="{'group_by': 'channel_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
