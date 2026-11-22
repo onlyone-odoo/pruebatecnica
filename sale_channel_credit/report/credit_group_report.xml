@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+
+    <record id="action_report_credit_group" model="ir.actions.report">
+        <field name="name">Credit Group</field>
+        <field name="model">sale.credit.group</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_channel_credit.report_credit_group</field>
+        <field name="report_file">sale_channel_credit.report_credit_group</field>
+        <field name="print_report_name">'Credit Group - %s' % (object.code)</field>
+        <field name="binding_model_id" ref="model_sale_credit_group"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_credit_group">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Credit Group</h2>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Name:</strong>
+                                <span t-field="doc.name"/>
+                                <br/>
+                                <strong>Code:</strong>
+                                <span t-field="doc.code"/>
+                                <br/>
+                                <strong>Sales Channel:</strong>
+                                <span t-field="doc.channel_id"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Global Credit:</strong>
+                                <span t-field="doc.global_credit"/>
+                                <br/>
+                                <strong>Used Credit:</strong>
+                                <span t-field="doc.used_credit"/>
+                                <br/>
+                                <strong>Available Credit:</strong>
+                                <span t-field="doc.available_credit"/>
+                            </div>
+                        </div>
+
+                        <h3>Customers</h3>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>VAT / Document</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.partner_ids" t-as="partner">
+                                    <td><span t-field="partner.name"/></td>
+                                    <td><span t-field="partner.vat"/></td>
+                                    <td><span t-field="partner.phone"/></td>
+                                    <td><span t-field="partner.email"/></td>
+                                </tr>
+                                <tr t-if="not doc.partner_ids">
+                                    <td colspan="4">No customers are assigned to this group.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Sales Orders</h3>
+                        <p>
+                            Confirmed orders of this channel that are not fully invoiced.
+                            The credit consumed by each order is the amount not yet invoiced,
+                            converted to the company currency.
+                        </p>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="orders" t-value="doc.get_credit_sale_orders()"/>
+                                <tr t-foreach="orders" t-as="order">
+                                    <td><span t-field="order.name"/></td>
+                                    <td><span t-field="order.date_order" t-options="{'widget': 'date'}"/></td>
+                                    <td class="text-end"><span t-field="order.amount_total"/></td>
+                                </tr>
+                                <tr t-if="not orders">
+                                    <td colspan="3">No sales orders are counted.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Invoices</h3>
+                        <p>
+                            Posted customer invoices and credit notes of this channel that
+                            are not fully paid. Credit notes reduce the used credit.
+                        </p>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Amount Due</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="invoices" t-value="doc.get_credit_invoices()"/>
+                                <tr t-foreach="invoices" t-as="invoice">
+                                    <td><span t-field="invoice.name"/></td>
+                                    <td><span t-field="invoice.invoice_date"/></td>
+                                    <td class="text-end"><span t-field="invoice.amount_residual"/></td>
+                                </tr>
+                                <tr t-if="not invoices">
+                                    <td colspan="3">No invoices are counted.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

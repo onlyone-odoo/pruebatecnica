@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_channel_salesman,sale.channel.salesman,model_sale_channel,sales_team.group_sale_salesman,1,0,0,0
+access_sale_channel_manager,sale.channel.manager,model_sale_channel,sales_team.group_sale_manager,1,1,1,1
+access_sale_channel_account,sale.channel.account,model_sale_channel,account.group_account_invoice,1,0,0,0
+access_sale_channel_stock,sale.channel.stock,model_sale_channel,stock.group_stock_user,1,0,0,0
+access_sale_credit_group_salesman,sale.credit.group.salesman,model_sale_credit_group,sales_team.group_sale_salesman,1,0,0,0
+access_sale_credit_group_manager,sale.credit.group.manager,model_sale_credit_group,sales_team.group_sale_manager,1,1,1,1
+access_sale_credit_group_account,sale.credit.group.account,model_sale_credit_group,account.group_account_invoice,1,0,0,0

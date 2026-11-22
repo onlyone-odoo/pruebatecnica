@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html). -->
+<odoo>
+
+    <record id="sale_channel_company_rule" model="ir.rule">
+        <field name="name">Sales channel: multi-company</field>
+        <field name="model_id" ref="model_sale_channel"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_credit_group_company_rule" model="ir.rule">
+        <field name="name">Credit group: multi-company</field>
+        <field name="model_id" ref="model_sale_credit_group"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>
